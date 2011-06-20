@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="ano_system.security.acl_manager.class">Ano\Bundle\SystemBundle\Security\AclManager</parameter>
+    </parameters>
+
+    <services>
+        <service id="ano_system.security.acl_manager" class="%ano_system.security.acl_manager.class%">
+            <argument type="service" id="security.acl.provider" on-invalid="ignore" />
+        </service>
+    </services>
+
+</container>
