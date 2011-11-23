@@ -1,0 +1,29 @@
+{
+    "name":         "ano/ano-system-bundle",
+    "description":  "Anonymation SystemBundle",
+    "keywords":     ["common", "system"],
+    "type":         "symfony-bundle",
+    "license":      "MIT",
+    "repositories": {
+        "packagist": false,
+        "ano-repo": {
+            "composer": {
+                "url": "http://packagist.local"
+            }
+        }
+    },
+    "authors":      [
+        {
+            "name":     "Anonymation",
+            "homepage": "http://www.anonymation.com"
+        }
+    ],
+    "require":      {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "2.*"
+    },
+    "autoload":     {
+        "psr-0": { "Ano\\Bundle\\SystemBundle": "" }
+    },
+    "target-dir": "Ano/Bundle/SystemBundle"
+}
