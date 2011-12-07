@@ -11,11 +11,12 @@ namespace Ano\Bundle\SystemBundle\Security;
 
 use
     Symfony\Component\Security\Core\User\UserInterface,
-    Symfony\Component\Security\Acl\Model\AclProviderInterface,
+    Symfony\Component\Security\Acl\Model\MutableAclProviderInterface,
     Symfony\Component\Security\Acl\Permission\MaskBuilder,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
     Symfony\Component\Security\Acl\Domain\ObjectIdentity,
-    Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity
+    Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity,
+    Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException
 ;
 
 /**
@@ -26,10 +27,10 @@ use
  */
 class AclManager implements AclManagerInterface
 {
-    /** @var AclProviderInterface */
+    /** @var MutableAclProviderInterface */
     protected $aclProvider;
 
-    public function __construct(AclProviderInterface $aclProvider)
+    public function __construct(MutableAclProviderInterface $aclProvider)
     {
         $this->aclProvider = $aclProvider;
     }
@@ -37,18 +38,33 @@ class AclManager implements AclManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function grantPrivilegesOnObject(UserInterface $user, $object, array $privileges = array())
+    public function grantPrivilegesOnObject(UserInterface $user, $object, array $privileges)
     {
         if (!is_object($object)) {
             throw new \InvalidArgumentException(sprintf('$object must be an instance of an object'));
         }
 
         $objectIdentity = ObjectIdentity::fromDomainObject($object);
-        $acl = $this->aclProvider->createAcl($objectIdentity);
-        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+        try {
+            $acl = $this->aclProvider->createAcl($objectIdentity);
+        } catch(AclAlreadyExistsException $e) {
+            // Get Acl if already exists
+            $acl = $this->aclProvider->findAcl($objectIdentity);
+        } catch(\Exception $e) {
+            throw $e;
+        }
+
+        // TODO: UGLYYYY hack for handling Doctrine proxies objects. To be removed as soon as possible
+        $ref = new \ReflectionClass($user);
+        $className = (false === stripos($ref->getName(), 'proxy')) ? $ref->getName() : $ref->getParentClass()->getName();
+
+        $securityIdentity = new UserSecurityIdentity($user->getUsername(), $className);
 
         // grant
-        $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        foreach ($privileges as $privilege) {
+            $acl->insertObjectAce($securityIdentity, $privilege);
+        }
+
         $this->aclProvider->updateAcl($acl);
     }
 
