@@ -16,7 +16,8 @@ use
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
     Symfony\Component\Security\Acl\Domain\ObjectIdentity,
     Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity,
-    Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException
+    Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException,
+    Doctrine\Common\Util\ClassUtils
 ;
 
 /**
@@ -54,10 +55,8 @@ class AclManager implements AclManagerInterface
             throw $e;
         }
 
-        // TODO: UGLYYYY hack for handling Doctrine proxies objects. To be removed as soon as possible
-        $ref = new \ReflectionClass($user);
-        $className = (false === stripos($ref->getName(), 'proxy')) ? $ref->getName() : $ref->getParentClass()->getName();
-
+        // TODO: Depdency to Doctrine here => To be removed as soon as a standard way is implemented in Symfony Security Component
+        $className = ClassUtils::getClass($user);
         $securityIdentity = new UserSecurityIdentity($user->getUsername(), $className);
 
         // grant
