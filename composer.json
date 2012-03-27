@@ -1,5 +1,5 @@
 {
-    "name":         "ano/ano-system-bundle",
+    "name":         "ano/system-bundle",
     "description":  "Anonymation core bundle",
     "keywords":     ["common", "system"],
     "type":         "symfony-bundle",
