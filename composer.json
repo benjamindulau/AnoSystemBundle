@@ -1,29 +1,26 @@
 {
     "name":         "ano/ano-system-bundle",
-    "description":  "Anonymation SystemBundle",
+    "description":  "Anonymation core bundle",
     "keywords":     ["common", "system"],
     "type":         "symfony-bundle",
     "license":      "MIT",
-    "repositories": {
-        "packagist": false,
-        "ano-repo": {
-            "composer": {
-                "url": "http://packagist.local"
-            }
-        }
-    },
-    "authors":      [
+    "authors": [
         {
-            "name":     "Anonymation",
+            "name":     "Benjamin Dulau",
+            "email":    "benjamin.dulau@anonymation.com",
             "homepage": "http://www.anonymation.com"
         }
     ],
-    "require":      {
-        "php": ">=5.3.2",
+    "require": {
         "symfony/framework-bundle": "2.*"
     },
-    "autoload":     {
+    "autoload": {
         "psr-0": { "Ano\\Bundle\\SystemBundle": "" }
     },
-    "target-dir": "Ano/Bundle/SystemBundle"
+    "target-dir": "Ano/Bundle/SystemBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
 }
