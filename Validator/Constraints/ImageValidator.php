@@ -29,7 +29,6 @@ class ImageValidator extends FileValidator
 
         if ($value instanceof File) {
             $value = $value->getRealPath();
-//            var_dump($value); die();
         }
 
         $size = @getimagesize($value);
