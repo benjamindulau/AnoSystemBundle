@@ -17,10 +17,5 @@
     "autoload": {
         "psr-0": { "Ano\\Bundle\\SystemBundle": "" }
     },
-    "target-dir": "Ano/Bundle/SystemBundle",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
-    }
+    "target-dir": "Ano/Bundle/SystemBundle"
 }
